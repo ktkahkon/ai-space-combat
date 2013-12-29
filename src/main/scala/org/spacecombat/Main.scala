@@ -33,18 +33,20 @@ class Main extends Application {
 
     primaryStage.show()
 
-    val team1 = new Team(size = 2, hasHumanPlayer = true)
-    val team2 = new Team(size = 2)
-
-    val gameWorld = new GameWorld(team1, team2)
-    val gameWorldVisualizer = new GameWorldVisualizer(gameWorld, canvas)
+    val team1 = new Team(TeamAlpha, size = 4, hasHumanPlayer = true)
+    val team2 = new Team(TeamBeta, size = 4)
 
     team1.teamAI = new BasicAI(team1, team2)
     team2.teamAI = new BasicAI(team2, team1)
 
+    GameWorld.addTeamAlpha(team1)
+    GameWorld.addTeamBeta(team2)
+
+    val gameWorldVisualizer = new GameWorldVisualizer(canvas)
+
     val gameLoop = new AnimationTimer() {
       def handle(p1: Long) {
-        gameWorld.update()
+        GameWorld.update()
 
         if (team1.hasHumanPlayer)
           updatePlayer(team1.members.head)
@@ -54,7 +56,6 @@ class Main extends Application {
     }
 
     initializeKeyboardControls(team1, primaryStage)
-
     gameLoop.start()
   }
 
@@ -65,6 +66,8 @@ class Main extends Application {
     if (Controls.right)
       player.angle += player.turnRate
 
+
+    player.firingBullets = Controls.fireBullet
     player.mainThrustersAreOn = Controls.up
     player.breakingThrustersAreOn = Controls.down
   }
@@ -97,6 +100,12 @@ class Main extends Application {
         }
         else if (code == KeyCode.DOWN && event.getEventType == KeyEvent.KEY_PRESSED) {
           Controls.down = true
+        }
+        else if (code == KeyCode.SHIFT && event.getEventType == KeyEvent.KEY_PRESSED) {
+          Controls.fireBullet = true
+        }
+        else if (code == KeyCode.SHIFT && event.getEventType == KeyEvent.KEY_RELEASED) {
+          Controls.fireBullet = false
         }
       }
     }

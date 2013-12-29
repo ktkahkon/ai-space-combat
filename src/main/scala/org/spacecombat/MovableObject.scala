@@ -10,21 +10,21 @@ trait MovableObject {
     position.x += velocity.x
     position.y += velocity.y
 
-    if (position.x < 30) {
-      position.x = 30
+    if (position.x < GameWorld.leftWall) {
+      position.x = GameWorld.leftWall
       velocity.x = -velocity.x * 0.7
     }
-    else if (position.x > 1250) {
-      position.x = 1250
+    else if (position.x > GameWorld.rightWall) {
+      position.x = GameWorld.rightWall
       velocity.x = -velocity.x * 0.7
     }
 
-    if (position.y < 40) {
-      position.y = 40
+    if (position.y < GameWorld.topWall) {
+      position.y = GameWorld.topWall
       velocity.y = -velocity.y * 0.7
     }
-    else if (position.y > 680) {
-      position.y = 680
+    else if (position.y > GameWorld.bottomWall) {
+      position.y = GameWorld.bottomWall
       velocity.y = -velocity.y * 0.7
     }
   }

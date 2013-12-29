@@ -22,10 +22,14 @@ class BasicAI(team: Team, opposingTeam: Team) extends TeamAI {
           else
             member.angle += member.turnRate
 
-          if (math.abs(member.angle - angle) < 3)
+          if (math.abs(member.angle - angle) < 3) {
             member.mainThrustersAreOn = true
-          else
+            member.firingBullets = true
+          }
+          else {
             member.mainThrustersAreOn = false
+            member.firingBullets = false
+          }
         }
       }
     }
