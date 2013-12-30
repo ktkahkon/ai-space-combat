@@ -20,7 +20,7 @@ object GameWorld {
 
     for (bullet <- bulletsTeamAlpha) {
       bullet.update()
-      if (collidingWithWalls(bullet) || !bullet.isAlive())
+      if (collidingWithWalls(bullet) || !bullet.isAlive() || collidingWithTeam(bullet, teamBeta))
         bulletsToBeRemoved += bullet
     }
 
@@ -31,7 +31,7 @@ object GameWorld {
 
     for (bullet <- bulletsTeamBeta) {
       bullet.update()
-      if (collidingWithWalls(bullet) || !bullet.isAlive())
+      if (collidingWithWalls(bullet) || !bullet.isAlive() || collidingWithTeam(bullet, teamAlpha))
         bulletsToBeRemoved += bullet
     }
 
@@ -52,5 +52,16 @@ object GameWorld {
   def addTeamBeta(team: Team) {
     require(!team.hasHumanPlayer, "The human player must be on Team Alpha!")
     teamBeta = team
+  }
+
+  private def collidingWithTeam(bullet: Bullet, team: Team): Boolean = {
+    for (member <- team.members) {
+      if (member.isAlive) {
+        if (member.distanceTo(bullet) < member.radius)
+          return true
+      }
+    }
+
+    false
   }
 }

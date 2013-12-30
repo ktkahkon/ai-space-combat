@@ -28,4 +28,10 @@ trait MovableObject {
       velocity.y = -velocity.y * 0.7
     }
   }
+
+  def distanceTo(secondObject: MovableObject): Double = {
+    val dx = this.position.x - secondObject.position.x
+    val dy = this.position.y - secondObject.position.y
+    math.sqrt(dx*dx + dy*dy)
+  }
 }

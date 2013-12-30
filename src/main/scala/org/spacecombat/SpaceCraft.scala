@@ -15,6 +15,7 @@ class SpaceCraft(teamID: TeamIdentifier, val maxEnergy: Double = 1800.0, val ene
 
   velocity.topSpeed = 4.5
   angle = 0.0
+  radius = 12.0
 
   def update() {
     energy += energyRecoveryRate
