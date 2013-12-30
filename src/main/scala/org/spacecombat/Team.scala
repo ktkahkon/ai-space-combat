@@ -20,8 +20,10 @@ class Team(val teamID: TeamIdentifier, val size: Int, val hasHumanPlayer: Boolea
 
   def update() {
     teamAI.update()
-    for (member <- members)
-      member.update()
+    for (member <- members) {
+      if (member.isAlive)
+        member.update()
+    }
   }
 
   private def randomizeStartingPositions() {

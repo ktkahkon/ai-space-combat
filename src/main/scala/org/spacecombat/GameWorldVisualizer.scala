@@ -10,14 +10,19 @@ class GameWorldVisualizer(canvas: Canvas) {
     graphicContext.clearRect(0, 0, 1280, 720)
 
     for (spaceCraft <- GameWorld.teamAlpha.members) {
-      if (spaceCraft.isPlayerControlled)
-        drawSpaceCraft(spaceCraft, Color.BLUEVIOLET)
-      else
-        drawSpaceCraft(spaceCraft, Color.GREENYELLOW)
+      if (spaceCraft.isAlive) {
+        if (spaceCraft.isPlayerControlled) {
+          drawSpaceCraft(spaceCraft, Color.BLUEVIOLET)
+          drawEnergyBar(spaceCraft.energy, spaceCraft.maxEnergy, Color.GREEN)
+        }
+        else
+          drawSpaceCraft(spaceCraft, Color.GREENYELLOW)
+      }
     }
 
     for (spaceCraft <- GameWorld.teamBeta.members)
-      drawSpaceCraft(spaceCraft, Color.ROSYBROWN)
+      if (spaceCraft.isAlive)
+        drawSpaceCraft(spaceCraft, Color.ROSYBROWN)
 
     for (bullet <- GameWorld.bulletsTeamAlpha)
       drawBullet(bullet, Color.WHITE)
@@ -41,6 +46,15 @@ class GameWorldVisualizer(canvas: Canvas) {
     graphicContext.setFill(color)
     graphicContext.translate(bullet.position.x, bullet.position.y)
     graphicContext.fillRect(-3, -3, 3, 3)
+    graphicContext.setTransform(trans)
+  }
+
+  private def drawEnergyBar(energy: Double, maxEnergy: Double, color: Color) {
+    val trans = graphicContext.getTransform
+    graphicContext.setFill(color)
+    graphicContext.translate(140, 50)
+    val length = (energy / maxEnergy) * 1000
+    graphicContext.fillRect(0, 0, length, 10)
     graphicContext.setTransform(trans)
   }
 }

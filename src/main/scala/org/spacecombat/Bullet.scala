@@ -2,6 +2,7 @@ package org.spacecombat
 
 class Bullet extends MovableObject {
   var currentLifeTime = 500
+  val damage = 80
 
   def update() {
     currentLifeTime -= 1

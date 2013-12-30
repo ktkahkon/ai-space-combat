@@ -57,8 +57,10 @@ object GameWorld {
   private def collidingWithTeam(bullet: Bullet, team: Team): Boolean = {
     for (member <- team.members) {
       if (member.isAlive) {
-        if (member.distanceTo(bullet) < member.radius)
+        if (member.distanceTo(bullet) < member.radius) {
+          member.takeDamage(bullet.damage)
           return true
+        }
       }
     }
 
