@@ -2,7 +2,7 @@ package org.spacecombat
 
 import javafx.application.Application
 import javafx.stage.Stage
-import javafx.scene.{CacheHint, Scene, Group}
+import javafx.scene.{Scene, Group}
 import javafx.scene.image.{ImageView, Image}
 import javafx.animation.AnimationTimer
 import javafx.event.EventHandler
@@ -68,6 +68,7 @@ class Main extends Application {
 
 
     player.firingBullets = Controls.fireBullet
+    player.firingBombs = Controls.fireBomb
     player.mainThrustersAreOn = Controls.up
     player.breakingThrustersAreOn = Controls.down
   }
@@ -106,6 +107,12 @@ class Main extends Application {
         }
         else if (code == KeyCode.SHIFT && event.getEventType == KeyEvent.KEY_RELEASED) {
           Controls.fireBullet = false
+        }
+        else if (code == KeyCode.CONTROL && event.getEventType == KeyEvent.KEY_PRESSED) {
+          Controls.fireBomb = true
+        }
+        else if (code == KeyCode.CONTROL && event.getEventType == KeyEvent.KEY_RELEASED) {
+          Controls.fireBomb = false
         }
       }
     }

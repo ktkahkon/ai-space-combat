@@ -24,11 +24,21 @@ class GameWorldVisualizer(canvas: Canvas) {
       if (spaceCraft.isAlive)
         drawSpaceCraft(spaceCraft, Color.ROSYBROWN)
 
-    for (bullet <- GameWorld.bulletsTeamAlpha)
-      drawBullet(bullet, Color.WHITE)
+    for (projectile <- GameWorld.projectilesTeamAlpha) {
+      projectile match {
+        case bullet: Bullet => drawBullet(bullet, Color.WHITE)
+        case bomb: Bomb => drawBomb(bomb, Color.LIGHTYELLOW)
+        case _ =>
+      }
+    }
 
-    for (bullet <- GameWorld.bulletsTeamBeta)
-      drawBullet(bullet, Color.PALEVIOLETRED)
+    for (projectile <- GameWorld.projectilesTeamBeta) {
+      projectile match {
+        case bullet: Bullet => drawBullet(bullet, Color.PALEVIOLETRED)
+        case bomb: Bomb => drawBomb(bomb, Color.RED)
+        case _ =>
+      }
+    }
   }
 
   private def drawSpaceCraft(craft: SpaceCraft, color: Color) {
@@ -55,6 +65,14 @@ class GameWorldVisualizer(canvas: Canvas) {
     graphicContext.translate(140, 50)
     val length = (energy / maxEnergy) * 1000
     graphicContext.fillRect(0, 0, length, 10)
+    graphicContext.setTransform(trans)
+  }
+
+  private def drawBomb(bomb: Bomb, color: Color) {
+    val trans = graphicContext.getTransform
+    graphicContext.setFill(color)
+    graphicContext.translate(bomb.position.x, bomb.position.y)
+    graphicContext.fillRect(-6, -6, 6, 6)
     graphicContext.setTransform(trans)
   }
 }

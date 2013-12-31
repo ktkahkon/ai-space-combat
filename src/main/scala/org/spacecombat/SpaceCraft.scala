@@ -9,10 +9,13 @@ class SpaceCraft(teamID: TeamIdentifier, val maxEnergy: Double = 1800.0, val ene
   var isAlive = true
   var isPlayerControlled = false
   var firingBullets = false
-  var currentBulletCoolDown = 0
-  val bulletCoolDownValue = 10
   var firingBombs = false
-  val enegyCostToFireBullet = 30
+  var currentBulletCoolDown = 0
+  var currentBombCoolDown = 0
+  val bulletCoolDownValue = 10
+  val bombCoolDownValue = 50
+  val energyCostToFireBullet = 30
+  val energyCostToFireBomb = 100
 
   velocity.topSpeed = 4.5
   angle = 0.0
@@ -41,9 +44,12 @@ class SpaceCraft(teamID: TeamIdentifier, val maxEnergy: Double = 1800.0, val ene
     if (currentBulletCoolDown > 0)
       currentBulletCoolDown -= 1
 
-    if (firingBullets && currentBulletCoolDown == 0 && energy > enegyCostToFireBullet) {
+    if (currentBombCoolDown > 0)
+      currentBombCoolDown -= 1
+
+    if (firingBullets && currentBulletCoolDown == 0 && energy > energyCostToFireBullet) {
       currentBulletCoolDown = bulletCoolDownValue
-      energy -= enegyCostToFireBullet
+      energy -= energyCostToFireBullet
 
       val bullet = new Bullet
       bullet.position.x = this.position.x
@@ -54,8 +60,26 @@ class SpaceCraft(teamID: TeamIdentifier, val maxEnergy: Double = 1800.0, val ene
 
 
       teamID match {
-        case TeamAlpha => GameWorld.bulletsTeamAlpha += bullet
-        case TeamBeta => GameWorld.bulletsTeamBeta += bullet
+        case TeamAlpha => GameWorld.projectilesTeamAlpha += bullet
+        case TeamBeta => GameWorld.projectilesTeamBeta += bullet
+      }
+    }
+
+    // TODO: Similar code as above. Refactor.
+    if (firingBombs && currentBombCoolDown == 0 && energy > energyCostToFireBomb) {
+      currentBombCoolDown = bombCoolDownValue
+      energy -= energyCostToFireBomb
+
+      val bomb = new Bomb
+      bomb.position.x = this.position.x
+      bomb.position.y = this.position.y
+
+      bomb.velocity.x = this.velocity.x + cos(toRadians(angle)) * 5.0
+      bomb.velocity.y = this.velocity.y + sin(toRadians(angle)) * 5.0
+
+      teamID match {
+        case TeamAlpha => GameWorld.projectilesTeamAlpha += bomb
+        case TeamBeta => GameWorld.projectilesTeamBeta += bomb
       }
     }
   }

@@ -1,5 +1,6 @@
 package org.spacecombat
 
-class Bomb extends MovableObject {
-
+class Bomb extends Projectile {
+  currentLifeTime = 500
+  damage = 400
 }
