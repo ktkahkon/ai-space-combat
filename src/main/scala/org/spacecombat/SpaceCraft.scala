@@ -77,6 +77,9 @@ class SpaceCraft(teamID: TeamIdentifier, val maxEnergy: Double = 1800.0, val ene
       bomb.velocity.x = this.velocity.x + cos(toRadians(angle)) * 5.0
       bomb.velocity.y = this.velocity.y + sin(toRadians(angle)) * 5.0
 
+      this.velocity.x -= cos(toRadians(angle))
+      this.velocity.y -= sin(toRadians(angle))
+
       teamID match {
         case TeamAlpha => GameWorld.projectilesTeamAlpha += bomb
         case TeamBeta => GameWorld.projectilesTeamBeta += bomb

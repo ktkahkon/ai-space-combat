@@ -58,15 +58,48 @@ object GameWorld {
   }
 
   private def collidingWithTeam(projectile: Projectile, team: Team): Boolean = {
+    var colliding = false
     for (member <- team.members) {
       if (member.isAlive) {
         if (member.distanceTo(projectile) < member.radius) {
           member.takeDamage(projectile.damage)
-          return true
+          colliding = true
+        }
+        else {
+          projectile match {
+            case b: Bomb =>
+              val distance = member.distanceTo(projectile)
+              if (distance < member.radius + b.blastRadius) {
+                if (!bombCanGetCloser(b, member)) {
+                  val modifier =
+                    if (distance < member.radius + (b.blastRadius / 3))
+                      1.0
+                    else
+                      distance / (member.radius + b.blastRadius)
+                  val damage = projectile.damage * modifier
+                  member.takeDamage(damage.toInt)
+                  colliding = true
+                }
+              }
+            case _ =>
+          }
         }
       }
     }
 
-    false
+    colliding
+  }
+
+  private def bombCanGetCloser(bomb: Bomb, obj: MovableObject): Boolean = {
+    val dummyBomb = new Bomb
+    dummyBomb.position.x = bomb.position.x
+    dummyBomb.position.y = bomb.position.y
+    dummyBomb.velocity.x = bomb.velocity.x
+    dummyBomb.velocity.y = bomb.velocity.y
+    dummyBomb.updatePosition()
+
+    val distance1 = obj.distanceTo(bomb)
+    val distance2 = obj.distanceTo(dummyBomb)
+    distance2 < distance1
   }
 }
