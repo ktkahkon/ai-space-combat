@@ -12,6 +12,7 @@ object GameWorld {
   val projectilesTeamAlpha = new mutable.HashSet[Projectile]
   val projectilesTeamBeta = new mutable.HashSet[Projectile]
   val projectilesToBeRemoved = new mutable.HashSet[Projectile]
+  var humanPlayerIsInGame = false
 
   // TODO: Handling bullets and bombs is similar. Refactor to common projectile/weapon handling.
   def update() {

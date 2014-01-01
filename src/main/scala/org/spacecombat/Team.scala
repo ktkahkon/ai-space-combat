@@ -13,8 +13,10 @@ class Team(val teamID: TeamIdentifier, val size: Int, val hasHumanPlayer: Boolea
   for (i <- 0 until size)
     members = new SpaceCraft(teamID) :: members
 
-  if (hasHumanPlayer)
+  if (hasHumanPlayer) {
     members.head.isPlayerControlled = true
+    GameWorld.humanPlayerIsInGame = true
+  }
 
   randomizeStartingPositions()
 

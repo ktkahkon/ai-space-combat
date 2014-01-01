@@ -86,7 +86,10 @@ class SpaceCraft(teamID: TeamIdentifier, val maxEnergy: Double = 1800.0, val ene
 
   def takeDamage(damage: Int) {
     energy -= damage
-    if (energy < 0)
+    if (energy < 0) {
       isAlive = false
+      if (isPlayerControlled)
+        GameWorld.humanPlayerIsInGame = false
+    }
   }
 }

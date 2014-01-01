@@ -15,14 +15,20 @@ class GameWorldVisualizer(canvas: Canvas) {
           drawSpaceCraft(spaceCraft, Color.BLUEVIOLET)
           drawEnergyBar(spaceCraft.energy, spaceCraft.maxEnergy, Color.GREEN)
         }
-        else
+        else {
           drawSpaceCraft(spaceCraft, Color.GREENYELLOW)
+          if (!GameWorld.humanPlayerIsInGame)
+            drawMiniEnergyBar(spaceCraft, Color.YELLOW)
+        }
       }
     }
 
     for (spaceCraft <- GameWorld.teamBeta.members)
-      if (spaceCraft.isAlive)
+      if (spaceCraft.isAlive) {
         drawSpaceCraft(spaceCraft, Color.ROSYBROWN)
+        if (!GameWorld.humanPlayerIsInGame)
+          drawMiniEnergyBar(spaceCraft, Color.YELLOW)
+      }
 
     for (projectile <- GameWorld.projectilesTeamAlpha) {
       projectile match {
@@ -73,6 +79,15 @@ class GameWorldVisualizer(canvas: Canvas) {
     graphicContext.setFill(color)
     graphicContext.translate(bomb.position.x, bomb.position.y)
     graphicContext.fillRect(-6, -6, 6, 6)
+    graphicContext.setTransform(trans)
+  }
+
+  private def drawMiniEnergyBar(craft: SpaceCraft, color: Color) {
+    val trans = graphicContext.getTransform
+    graphicContext.setFill(color)
+    graphicContext.translate(craft.position.x - 20, craft.position.y + 25)
+    val length = (craft.energy / craft.maxEnergy) * 50
+    graphicContext.fillRect(0, 0, length, 4)
     graphicContext.setTransform(trans)
   }
 }
