@@ -12,11 +12,11 @@ class GameWorldVisualizer(canvas: Canvas) {
     for (spaceCraft <- GameWorld.teamAlpha.members) {
       if (spaceCraft.isAlive) {
         if (spaceCraft.isPlayerControlled) {
-          drawSpaceCraft(spaceCraft, Color.BLUEVIOLET)
-          drawEnergyBar(spaceCraft.energy, spaceCraft.maxEnergy, Color.GREEN)
+          drawSpaceCraft(spaceCraft, Color.rgb(7,214,138))
+          drawEnergyBar(spaceCraft.energy, spaceCraft.maxEnergy, Color.rgb(50, 100, 70, 0.7))
         }
         else {
-          drawSpaceCraft(spaceCraft, Color.GREENYELLOW)
+          drawSpaceCraft(spaceCraft, Color.rgb(7,214,198))
           if (!GameWorld.humanPlayerIsInGame)
             drawMiniEnergyBar(spaceCraft, Color.YELLOW)
         }
@@ -25,7 +25,7 @@ class GameWorldVisualizer(canvas: Canvas) {
 
     for (spaceCraft <- GameWorld.teamBeta.members)
       if (spaceCraft.isAlive) {
-        drawSpaceCraft(spaceCraft, Color.ROSYBROWN)
+        drawSpaceCraft(spaceCraft, Color.rgb(167,25,75))
         if (!GameWorld.humanPlayerIsInGame)
           drawMiniEnergyBar(spaceCraft, Color.YELLOW)
       }
@@ -45,6 +45,23 @@ class GameWorldVisualizer(canvas: Canvas) {
         case _ =>
       }
     }
+
+    for (explosion <- GameWorld.bombExplosions) {
+      drawExplosion(explosion)
+    }
+  }
+
+  private def drawExplosion(explosion: BombExplosion) {
+    val trans = graphicContext.getTransform
+    var t: Double = (1.0 * explosion.time) / explosion.maxTime
+    t = 1.0 - t
+    val color = Color.rgb(250, 252, 254, t)
+    graphicContext.setFill(color)
+    graphicContext.translate(explosion.position.x, explosion.position.y)
+    val size = explosion.time * 2.5
+    val offset = size / 2
+    graphicContext.fillOval(-offset, -offset, size, size)
+    graphicContext.setTransform(trans)
   }
 
   private def drawSpaceCraft(craft: SpaceCraft, color: Color) {
@@ -52,8 +69,7 @@ class GameWorldVisualizer(canvas: Canvas) {
     graphicContext.setFill(color)
     graphicContext.translate(craft.position.x, craft.position.y)
     graphicContext.rotate(craft.angle)
-    graphicContext.fillRect(-10, -10, 20, 20)
-    graphicContext.fillRect(0, -5, 17, 10)
+    graphicContext.fillPolygon(Array(-6.0, -6.0, 10.0), Array(-7.0, 7.0, 0.0), 3)
     graphicContext.setTransform(trans)
   }
 
@@ -61,7 +77,7 @@ class GameWorldVisualizer(canvas: Canvas) {
     val trans = graphicContext.getTransform
     graphicContext.setFill(color)
     graphicContext.translate(bullet.position.x, bullet.position.y)
-    graphicContext.fillRect(-3, -3, 3, 3)
+    graphicContext.fillRect(-2, -2, 2, 2)
     graphicContext.setTransform(trans)
   }
 
@@ -78,7 +94,7 @@ class GameWorldVisualizer(canvas: Canvas) {
     val trans = graphicContext.getTransform
     graphicContext.setFill(color)
     graphicContext.translate(bomb.position.x, bomb.position.y)
-    graphicContext.fillRect(-6, -6, 6, 6)
+    graphicContext.fillOval(-2, -2, 4, 4)
     graphicContext.setTransform(trans)
   }
 

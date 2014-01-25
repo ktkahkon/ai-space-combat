@@ -9,6 +9,7 @@ import javafx.event.EventHandler
 import javafx.scene.input.{KeyCode, KeyEvent}
 import org.spacecombat.AI.BasicAI
 import javafx.scene.canvas.Canvas
+import javafx.scene.paint.Color
 
 object Main {
   def main(args: Array[String]) {
@@ -20,10 +21,11 @@ class Main extends Application {
   override def start(primaryStage: Stage) {
     val root = new Group
     val scene = new Scene(root, 1280, 720)
+//    scene.setFill(Color.BLACK)
     primaryStage.setScene(scene)
     primaryStage.setTitle("AI Experiment: Space Combat")
 
-    val image = new Image("background1.jpg")
+    val image = new Image("bg.jpg")
     val imageView = new ImageView()
     imageView.setImage(image)
     root.getChildren.add(imageView)
@@ -33,8 +35,8 @@ class Main extends Application {
 
     primaryStage.show()
 
-    val team1 = new Team(TeamAlpha, size = 4, hasHumanPlayer = true)
-    val team2 = new Team(TeamBeta, size = 4)
+    val team1 = new Team(TeamAlpha, size = 2, hasHumanPlayer = true)
+    val team2 = new Team(TeamBeta, size = 2)
 
     team1.teamAI = new BasicAI(team1, team2)
     team2.teamAI = new BasicAI(team2, team1)

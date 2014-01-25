@@ -3,16 +3,18 @@ package org.spacecombat
 import scala.collection.mutable
 
 object GameWorld {
-  val leftWall = 30
-  val rightWall = 1250
-  val topWall = 40
-  val bottomWall = 680
+  val leftWall = 0
+  val rightWall = 1280
+  val topWall = 0
+  val bottomWall = 720
   var teamAlpha: Team = null
   var teamBeta: Team = null
   val projectilesTeamAlpha = new mutable.HashSet[Projectile]
   val projectilesTeamBeta = new mutable.HashSet[Projectile]
   val projectilesToBeRemoved = new mutable.HashSet[Projectile]
+  val bombExplosions = new mutable.HashSet[BombExplosion]()
   var humanPlayerIsInGame = false
+  val explosionsToBeRemoved = new mutable.HashSet[BombExplosion]
 
   // TODO: Handling bullets and bombs is similar. Refactor to common projectile/weapon handling.
   def update() {
@@ -28,8 +30,12 @@ object GameWorld {
         projectilesToBeRemoved += projectile
     }
 
-    for (projectile <- projectilesToBeRemoved)
+    for (projectile <- projectilesToBeRemoved) {
       projectilesTeamAlpha -= projectile
+      if (projectile.isInstanceOf[Bomb]) {
+        bombExplosions.add(new BombExplosion(projectile.position))
+      }
+    }
     projectilesToBeRemoved.clear()
 
 
@@ -39,9 +45,23 @@ object GameWorld {
         projectilesToBeRemoved += projectile
     }
 
-    for (projectile <- projectilesToBeRemoved)
+    for (projectile <- projectilesToBeRemoved) {
       projectilesTeamBeta -= projectile
+      if (projectile.isInstanceOf[Bomb]) {
+        bombExplosions.add(new BombExplosion(projectile.position))
+      }
+    }
     projectilesToBeRemoved.clear()
+
+
+    for (explosion <- bombExplosions) {
+      if (!explosion.update())
+        explosionsToBeRemoved += explosion
+    }
+
+    for (e <- explosionsToBeRemoved)
+      bombExplosions -= e
+    explosionsToBeRemoved.clear()
   }
 
   private def collidingWithWalls(obj: MovableObject): Boolean = {

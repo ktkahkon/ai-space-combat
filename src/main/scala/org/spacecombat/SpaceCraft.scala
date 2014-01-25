@@ -2,7 +2,7 @@ package org.spacecombat
 
 import scala.math._
 
-class SpaceCraft(teamID: TeamIdentifier, val maxEnergy: Double = 1800.0, val energyRecoveryRate: Double = 1.5, val turnRate: Double = 2.5, val accelerationRate: Double = 0.04) extends MovableObject {
+class SpaceCraft(teamID: TeamIdentifier, val maxEnergy: Double = 1800.0, val energyRecoveryRate: Double = 1.5, val turnRate: Double = 2.3, val accelerationRate: Double = 0.033) extends MovableObject {
   var energy = maxEnergy
   var mainThrustersAreOn = false
   var breakingThrustersAreOn = false
@@ -17,9 +17,9 @@ class SpaceCraft(teamID: TeamIdentifier, val maxEnergy: Double = 1800.0, val ene
   val energyCostToFireBullet = 30
   val energyCostToFireBomb = 100
 
-  velocity.topSpeed = 4.5
+  velocity.topSpeed = 4.0
   angle = 0.0
-  radius = 12.0
+  radius = 8.0
 
   def update() {
     energy += energyRecoveryRate
@@ -77,8 +77,8 @@ class SpaceCraft(teamID: TeamIdentifier, val maxEnergy: Double = 1800.0, val ene
       bomb.velocity.x = this.velocity.x + cos(toRadians(angle)) * 5.0
       bomb.velocity.y = this.velocity.y + sin(toRadians(angle)) * 5.0
 
-      this.velocity.x -= cos(toRadians(angle))
-      this.velocity.y -= sin(toRadians(angle))
+      this.velocity.x -= cos(toRadians(angle)) * 0.8
+      this.velocity.y -= sin(toRadians(angle)) * 0.8
 
       teamID match {
         case TeamAlpha => GameWorld.projectilesTeamAlpha += bomb
